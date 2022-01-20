@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class ViewController: UIViewController ,  UITableViewDataSource , UITableViewDelegate {
     
@@ -15,13 +16,25 @@ class ViewController: UIViewController ,  UITableViewDataSource , UITableViewDel
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell") as! movieCell
         
         let movie = movies[indexPath.row]
         
         let title = movie["title"] as! String
         
-        cell.textLabel?.text = title
+        let synopsis = movie["overview"] as! String
+        
+        cell.movieTitle.text = title
+        
+        cell.synopsisLabel.text = synopsis
+        
+        let baseUrl = "https://image.tmdb.org/t/p/w185"
+        
+        let posterPath = movie["poster_path"] as! String
+        
+        let posterUrl = URL(string: baseUrl + posterPath)
+        
+        cell.posterView.af.setImage(withURL: posterUrl!)
         
         
         
@@ -61,7 +74,8 @@ class ViewController: UIViewController ,  UITableViewDataSource , UITableViewDel
                  
                  self.tableView.reloadData()
                     
-                 print(dataDictionary)
+                // print(dataDictionary)
+                // ^prints information to fetch from api 
                     // TODO: Get the array of movies
                     // TODO: Store the movies in a property to use elsewhere
                     // TODO: Reload your table view data
